@@ -64,12 +64,16 @@ body {
 
 .sub-box {
   display: flex; }
+  @media only screen and (max-width: 1000px) {
+    .sub-box {
+      flex-wrap: wrap; } }
   .sub-box .average-count {
     background: beige;
-    padding: 40px;
+    padding: 10px;
     justify-content: center;
     display: flex;
-    flex-direction: column; }
+    flex-direction: column;
+    align-items: center; }
     .sub-box .average-count .tweet-count-number {
       font-size: 12em;
       color: #4d63bc;

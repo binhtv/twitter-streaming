@@ -77,7 +77,7 @@ function displayTopWord(series, words) {
 			height: '100%'
 		},
 		title: {
-			text: 'Number of mentions among '+ words.join(', ') +' in the last minutes'
+			text: 'Number of mentions among words in the last minutes'
 		},
 		tooltip: {
 			useHTML: true,
