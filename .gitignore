@@ -1,2 +1,4 @@
 metastore_db
 target
+node_modules
+.history
