@@ -70,14 +70,14 @@ function displayLiveCountOfTweets() {
 	});
 }
 
-function displayTopWord() {
+function displayTopWord(series, words) {
 	return Highcharts.chart('topWords', {
 		chart: {
 			type: 'packedbubble',
 			height: '100%'
 		},
 		title: {
-			text: 'Number of mentions among Trump, Bitcoin, Christmas and Snow in the last minutes'
+			text: 'Number of mentions among '+ words.join(', ') +' in the last minutes'
 		},
 		tooltip: {
 			useHTML: true,
@@ -102,32 +102,7 @@ function displayTopWord() {
 				minPointSize: 5
 			}
 		},
-		series: [{
-			name: 'Trump',
-			data: [{
-				name: 'Trump',
-				value: 0
-			}]
-		}, {
-			name: 'Bitcoin',
-			data: [{
-				name: "Bitcoin",
-				value: 0
-			}]
-		},
-		{
-			name: 'Football',
-			data: [{
-				name: "Football",
-				value: 0
-			}]
-		}, {
-			name: 'Snow',
-			data: [{
-				name: "Snow",
-				value: 0
-			}]
-		}],
+		series: series,
 		responsive: {
 			rules: [{
 				condition: {
@@ -163,6 +138,17 @@ function averageTweetCount() {
 	return demo;
 }
 
+function updateListWord(mentions) {
+	if(mentions && mentions.length > 0) {
+		let lis = [];
+		mentions.forEach(function(m, index) {
+			lis.push('<li>' +m.word + ': '+ m.count + ' tweets</li>');
+		});
+
+		$('#topWordsDetail').html(lis);
+	}
+}
+
 $('document').ready(function (e) {
 	var pubnub = new PubNub({
 		publishKey: 'pub-c-7c748e9e-6003-42be-ab7a-b92472d65f44',
@@ -195,15 +181,44 @@ $('document').ready(function (e) {
 			}
 
 			//Update word count
-			let words = ['Trump', 'Bitcoin', 'Football', 'Snow'];
+			let words = ['Trump', 'Bitcoin', 'Football', 'Snow', 'Iphone'];
+			let mentions = [];
 			words.forEach(function(w, index) {
 				if(msg.message[w.toLowerCase()] != null && msg.message[w.toLowerCase()] != undefined) {
-					topWord.series[index].setData([{
-							name: w,
-							value: msg.message[w.toLowerCase()]
-						}]);
+					mentions.push({word: w, count: msg.message[w.toLowerCase()]});
 				}
 			});
+
+			if(mentions.length == 0) {
+				return;
+			}
+			//Sort by count descending
+			mentions.sort(function(a, b) {
+				return b.count - a.count;
+			});
+
+			//Update chart
+			if(!topWord) {
+				let initialSeries = [];
+				mentions.forEach(function(m, index) {
+					initialSeries.push({
+						name: m.word,
+						data: [{
+							name: m.word,
+							value: m.count
+						}]
+					});
+				});
+				topWord = displayTopWord(initialSeries, words);
+			} else {
+				mentions.forEach(function(m, index) {
+					topWord.series[index].setData([{
+						name: m.word,
+						value: m.count
+					}]);
+				});
+			}
+			updateListWord(mentions);
 		},
 		presence: function (presenceEvent) {
 			console.log('present');
@@ -212,17 +227,6 @@ $('document').ready(function (e) {
 
 	chart = displayLiveCountOfTweets();
 	averageCount = averageTweetCount();
-	topWord = displayTopWord();
-	// setInterval(function(e) {
-	// 	topWord.series[0].setData([{
-	// 			name: 'Trump',
-	// 			value: Math.random() * 1000
-	// 		}]);
-	// 		topWord.series[2].setData([{
-	// 			name: 'Chrismat',
-	// 			value: Math.random() * 1000
-	// 		}]);
-	// }, 2000);
 
 	var chart;
 	var averageCount;

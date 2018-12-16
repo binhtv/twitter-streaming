@@ -76,3 +76,15 @@ body {
       text-align: center; }
   .sub-box .group-info {
     margin: auto; }
+  .sub-box .top-word-detail {
+    display: flex;
+    align-items: center; }
+    .sub-box .top-word-detail ul {
+      list-style-type: none; }
+      .sub-box .top-word-detail ul li:first-child {
+        color: #7cb5ec;
+        font-weight: bold;
+        font-size: 20px; }
+      .sub-box .top-word-detail ul li:nth-child(2) {
+        color: #434348;
+        font-size: 18px; }
