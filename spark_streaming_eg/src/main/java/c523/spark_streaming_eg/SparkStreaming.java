@@ -88,10 +88,9 @@ public class SparkStreaming {
 		return contained;
 	}
 	
-	private static void saveWordCounts(JavaPairInputDStream<String, String> stream) {
+	private static void saveWordCounts(JavaPairInputDStream<String, String> stream, String[] filteredWords) {
 		String table = "tweet_words";
 		String cf = "wordInfo";
-		String filteredWords[] = new String[]{"trump", "bitcoin", "football", "snow"};
 		JavaDStream<String> tweetStream = stream.map(s -> new Gson().fromJson(s._2, Tweet.class))
 													.filter(s -> SparkStreaming.filterWord(s.getStatusText(), filteredWords))
 													.map(s -> s.getStatusText());
@@ -136,6 +135,11 @@ public class SparkStreaming {
 	      System.err.println("Usage: JavaNetworkWordCount <hostname>:<port>");
 	      System.exit(1);
 	    }
+	    String filteredWords[] = new String[]{"trump", "bitcoin", "football", "snow", "iphone"};
+	    if(args.length == 2) {
+	    	filteredWords = args[1].split(",");
+	    }
+	    System.out.println(filteredWords);
 	    initialize();
 	    // Create the context with a 1 second batch size
 	    SparkConf sparkConf = new SparkConf().setAppName("JavaNetworkWordCount").setMaster("local");
@@ -152,7 +156,7 @@ public class SparkStreaming {
 				String.class, StringDecoder.class, StringDecoder.class, kafkaParams, topics);
 	    
 	    saveCounts(stream);
-	    saveWordCounts(stream);
+	    saveWordCounts(stream, filteredWords);
 	    
 	    ssc.start();
 	    ssc.awaitTermination();
