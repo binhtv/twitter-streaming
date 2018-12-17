@@ -132,7 +132,7 @@ public class SparkStreaming {
 	
 	public static void main(String[] args) throws Exception {
 	    if (args.length < 1) {
-	      System.err.println("Usage: JavaNetworkWordCount <hostname>:<port>");
+	      System.err.println("Usage: SparkStreaming <hostname>:<port>");
 	      System.exit(1);
 	    }
 	    String filteredWords[] = new String[]{"trump", "bitcoin", "football", "snow", "iphone"};
@@ -142,7 +142,7 @@ public class SparkStreaming {
 	    System.out.println(filteredWords);
 	    initialize();
 	    // Create the context with a 1 second batch size
-	    SparkConf sparkConf = new SparkConf().setAppName("JavaNetworkWordCount").setMaster("local");
+	    SparkConf sparkConf = new SparkConf().setAppName("SparkStreaming").setMaster("local");
 	    JavaStreamingContext ssc = new JavaStreamingContext(sparkConf, Durations.seconds(5));
 
 	    Map<String, String> kafkaParams = new HashMap<>();
