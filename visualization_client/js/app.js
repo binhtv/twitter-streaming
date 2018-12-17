@@ -154,6 +154,10 @@ $('document').ready(function (e) {
 		publishKey: 'pub-c-7c748e9e-6003-42be-ab7a-b92472d65f44',
 		subscribeKey: 'sub-c-30f86508-cee8-11e7-91cc-2ef9da9e0d0e'
 	});
+	// var pubnub = new PubNub({
+	// 	publishKey: 'pub-c-9d465a0e-ded6-4539-96da-c215b4f19071',
+	// 	subscribeKey: 'sub-c-25fe06a8-cee8-11e7-91cc-2ef9da9e0d0e'
+	// });
 
 	pubnub.subscribe({
 		channels: ['my_channel'],
@@ -181,7 +185,7 @@ $('document').ready(function (e) {
 			}
 
 			//Update word count
-			let words = ['Trump', 'Bitcoin', 'Football', 'Snow', 'Iphone'];
+			let words = ['Trump', 'Bitcoin', 'Football', 'Snow', 'Iphone', 'Christmas'];
 			let mentions = [];
 			words.forEach(function(w, index) {
 				if(msg.message[w.toLowerCase()] != null && msg.message[w.toLowerCase()] != undefined) {
